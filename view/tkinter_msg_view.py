@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
-from time import sleep
 
+'''
+This class represents the pop up box that provides a summary of the run results
+'''
 class message_window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -24,5 +25,5 @@ class message_window(tk.Tk):
             final_text = ''.join(self.error_list_tracker)
             self.text_message_text_widget.config(text=final_text)
 
-
+# Designed, Written, and Tested By Ramzi Reilly Adil
 

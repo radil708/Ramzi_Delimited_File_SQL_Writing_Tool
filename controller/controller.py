@@ -2,8 +2,10 @@ from model.model import *
 from view.tkinter_view import *
 from tkinter import filedialog
 from view.tkinter_msg_view import *
-from time import sleep
 
+'''
+This class acts as the controller for Ramzi's Delimited File SQL Writing Tool program.
+'''
 class script_writer_controller():
     def __init__(self):
         self.model = script_writer_model()
@@ -21,9 +23,6 @@ class script_writer_controller():
         :return: @str filepath where '/' is replaced by '\'
         """
         filepath = filepath_in
-        # for k,v in FILEPATH_DIR_DICT.items(): #make sure directory correct
-        #     if k in filepath:
-        #         filepath = filepath.replace(k,v)
         return filepath.replace('/','\\')
     def target_dir_btn_fxn(self):
         """
@@ -65,7 +64,6 @@ class script_writer_controller():
         #so only one message window exists at a time
         #TODO make this better should not rely on setting variable to None line 84
         if self.msg_window != None:
-            #print(self.msg_window)
             self.msg_window.destroy()
         else:
             self.msg_window = message_window()
@@ -95,3 +93,5 @@ class script_writer_controller():
 
         run_btn = self.main_window.get_main_window_run_btn()
         run_btn.configure(command=self.run_btn_fxn)
+
+# Designed, Written, and Tested By Ramzi Reilly Adil

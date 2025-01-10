@@ -22,6 +22,9 @@ ZZZzz /,`.-'`'    -.  ;-;;,_
     '---''(_/--'  `-'\_)  
 '''
 
+'''
+This class acts as the view for Ramzi's Delimited File SQL Writing Tool program.
+'''
 class main_window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -34,9 +37,8 @@ class main_window(tk.Tk):
         self.protocol("WM_DELETE_WINDOW", sys.exit)
 
         style = ttk.Style()
-        #style.configure('Style.TLabel', font='TkFixedFont')
         style.configure('Style.TLabel', font=('Courier',20))
-        top_label = ttk.Label(master = self, text = textample_3, justify='left', style='Style.TLabel') # use ttk to make ASCII art look nicer
+        top_label = ttk.Label(master = self, text = textample_3, justify='left', style='Style.TLabel') #use ttk to make ASCII art look nicer
         top_label.pack()
         art_by_label = tk.Label(master=self, text = 'ASCII Art by Felix Lee', justify='right',font=('Courier',8))
         art_by_label.place(in_=top_label, relx=0.80,x=25, rely=0.75 )
@@ -144,3 +146,5 @@ class main_window(tk.Tk):
 
     def get_main_window_run_btn(self):
         return self.run_button
+
+# Designed, Written, and Tested By Ramzi Reilly Adil
