@@ -15,6 +15,7 @@ Author: Ramzi Reilly Adil
 - [Author Notes](#Author-Notes)
 - [Contributors](#Contributors)
 - [Maintainers](#Maintainers)
+- [Submitting Issues](#Submitting-Issues)
 
 
 ## Background
@@ -61,7 +62,7 @@ me improve this master fork in the future. Thank you!
 ## Maintainers
 - [@radil708](https://github.com/radil708)
 
-## Submitting Requests Or Issues
+## Submitting Issues
 If you have any comments on how to improve the program or any features you think may be useful, feel free to submit an issue.
 
 You can submit issues here -> [Open an issue](https://github.com/radil708/RamziDataSourceTool/issues/new).
