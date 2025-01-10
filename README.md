@@ -8,11 +8,11 @@ Author: Ramzi Reilly Adil
 
 ## Table of Contents
 - [Background](#background)
-- [Install Requirements](#Install Requirements)
-- [How To Use](#How To Use)
-- [GUI](#Graphical User Interface)
+- [Install Requirements](#Install-Requirements)
+- [How To Use](#How-To-Use)
+- [GUI](#Graphical-User-Interface)
 - [Features](#Features)
-- [Author Notes](#Author Notes)
+- [Author Notes](#Author-Notes)
 - [Contributors](#Contributors)
 - [Maintainers](#Maintainers)
 
