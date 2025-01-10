@@ -2,14 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 import sys
 
-textample = '''
- ____                     _ _       ____   ___  _ 
-|  _ \ __ _ _ __ ___  ___(_| )___  / ___| / _ \| | 
-| |_) / _` | '_ ` _ \|_  / |// __| \___ \| | | | | 
-|  _ < (_| | | | | | |/ /| | \__ \  ___) | |_| | |___ 
-|_| \_\__,_|_| |_|_|_/___|_| |___/ |____/_\__\_\_____|
-'''
-
 textample_2 = '''
  ____                     _ _       ____   ___  _                           
 |  _ \ __ _ _ __ ___  ___(_| )___  / ___| / _ \| |                          
@@ -33,8 +25,8 @@ ZZZzz /,`.-'`'    -.  ;-;;,_
 class main_window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.title("Ramzi's Delimited File SQL Script Writing Tool Version 1.0")
-        self.geometry('700x375')
+        self.title("Ramzi's Delimited File SQL Script Writing Tool Version 1.1")
+        self.geometry('700x400')
         self.resizable(False, False)
         # self.protocol("WM_DELETE_WINDOW", lambda : exit(0))
         self.eval('tk::PlaceWindow . center')
@@ -51,8 +43,9 @@ class main_window(tk.Tk):
         self.input_frame_grid = tk.Frame()
 
         self.row_1_list = self.make_delimiter_section()
-        self.row_2_list = self.make_text_input_frames('Target Directory       ','Browse',1)
-        self.row_3_list = self.make_text_input_frames('File Export Directory', 'Browse', 2)
+        self.row_2_list = self.make_row_terminator_section()
+        self.row_3_list = self.make_text_input_frames('Target Directory       ','Browse',2)
+        self.row_4_list = self.make_text_input_frames('File Export Directory', 'Browse', 3)
 
 
         self.input_frame_grid.pack()
@@ -64,6 +57,11 @@ class main_window(tk.Tk):
 
         bottom_left_label = tk.Label(master=self, text="Designed, Written, and Developed by Ramzi Reilly Adil")
         bottom_left_label.place(relx=0, rely=1, anchor="sw")
+
+        #set row terminator default
+        row_term_stringvar = self.get_row_terminator_dropdown_stringvar()
+        row_term_stringvar.set('\\n')
+
 
         '''
         self.upper_user_frame = tk.Frame(master=self)
@@ -101,28 +99,48 @@ class main_window(tk.Tk):
         entry.grid(row=0, column=1, padx=5, pady=5, sticky= "w")
         return [label, entry, string_var]
 
+    def make_row_terminator_section(self):
+        label = tk.Label(master=self.input_frame_grid, text='Row Terminator', justify='left')
+        row_terminator_dropdown_value = tk.StringVar()
+        self.row_terminator_options = ["\\n", "0x0A", "\\r", "\\r\\n"]
+        row_terminator_dropdown_entry = ttk.Combobox(master=self.input_frame_grid, state="readonly",
+                                            values=self.row_terminator_options, width=5,
+                                            textvariable=row_terminator_dropdown_value )  # can use get method to get value
+        row_terminator_dropdown_value.set("\n")
+        label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        row_terminator_dropdown_entry.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+
+        return[label, row_terminator_dropdown_entry, row_terminator_dropdown_value]
+
+
     def get_delimiter_entry_widget(self):
         return self.row_1_list[1]
 
     def get_delimiter_entry_stringvar(self):
         return self.row_1_list[2]
 
-    def get_target_dir_entry_widget(self):
+    def get_row_terminator_dropdown_widget(self):
         return self.row_2_list[1]
 
-    def get_target_dir_entry_stringvar(self):
+    def get_row_terminator_dropdown_stringvar(self):
         return self.row_2_list[2]
-    def get_target_dir_browse_button(self):
-        return self.row_2_list[3]
 
-    def get_export_path_entry_widget(self):
+    def get_target_dir_entry_widget(self):
         return self.row_3_list[1]
 
-    def get_export_path_entry_stringvar(self):
+    def get_target_dir_entry_stringvar(self):
         return self.row_3_list[2]
+    def get_target_dir_browse_button(self):
+        return self.row_3_list[3]
+
+    def get_export_path_entry_widget(self):
+        return self.row_4_list[1]
+
+    def get_export_path_entry_stringvar(self):
+        return self.row_4_list[2]
 
     def get_export_path_browse_button(self):
-        return self.row_3_list[3]
+        return self.row_4_list[3]
 
     def get_main_window_run_btn(self):
         return self.run_button

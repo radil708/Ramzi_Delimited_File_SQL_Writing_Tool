@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from time import sleep
+
 class message_window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)

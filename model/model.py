@@ -9,9 +9,8 @@ each file to determine what the field names should be.
 
 Any empty fields will have a
 field name called "NO_FIELD_NAME_X" where x is a number. So if there are two empty fields
-there will be two columns labeled "NO_FIELD_NAME_1" and "NO_FIELD_NAME__2"
+there will be two columns labeled "NO_FIELD_NAME_1" and "NO_FIELD_NAME_2"
 
-This model file contains the functionality needed to run the program
 '''
 
 import os
@@ -73,6 +72,8 @@ class script_writer_model():
         self.WHOLE_BULK_INSERT_LIST = []
         self.error_tracker = []
         self.skip_file = []
+        self.row_terminator = None
+
 
     def reset_file_model_parameters(self):
         self.file_number_counter = 1
@@ -83,6 +84,7 @@ class script_writer_model():
         self.WHOLE_BULK_INSERT_LIST = []
         self.error_tracker = []
         self.skip_file = []
+        self.row_terminator = None
 
     def get_all_filenames(self,target_directory: str) -> list:
         '''
@@ -110,6 +112,7 @@ class script_writer_model():
             for i in range(len(all_fields_unformatted)):
                 field = all_fields_unformatted[i].replace(' ', '_') #replacing space char with underscore
                 field = field.replace('\n','') #for last field remove newline char
+                field = field.replace('\"','') #remove quotes in field names
     
                 for char in NON_VALID_CHARS_FIELD_NAME:
                     field = field.replace(char,'') #replace any non_valid fielld chars
@@ -223,7 +226,7 @@ class script_writer_model():
         s1 = f'BULK INSERT [dbo].[{table_name}] '
         s2 = f'FROM \'\'\' + @{file_ins} + \'\'\' WITH\n'
         #s3 = f'\t(\n\tFIELDTERMINATOR = \'\'{delim}\'\',\n\tROWTERMINATOR = \'\'\\n\'\'\n\t)'
-        s3 = f'\t(\n\tFIELDTERMINATOR = \'\'{delim}\'\',\n\tROWTERMINATOR = \'\'0x0A\'\'\n\t)'
+        s3 = f'\t(\n\tFIELDTERMINATOR = \'\'{delim}\'\',\n\tROWTERMINATOR = \'\'{self.row_terminator}\'\'\n\t)'
         #if file_contains_headers is True:
     
         # files will always have headers so no need for if statement
@@ -261,7 +264,13 @@ class script_writer_model():
         all_files = self.get_all_filenames(TARGET_DIR)  # want to try catch for files that are not flat files
         target_files = all_files
 
-        self.WHOLE_BULK_INSERT_LIST.append('DECLARE @data_src VARCHAR(max) = \'<<SourceLoadPath>>\'\n')
+        self.WHOLE_BULK_INSERT_LIST.append('use <<ConversionDatabase>>\n\n')
+        self.WHOLE_BULK_INSERT_LIST.append('DECLARE @data_src VARCHAR(max) = \'<<SourceDataLoadPath>>\'\n\n')
+        self.WHOLE_BULK_INSERT_LIST.append('IF \'<<LoadSourceDataFlagYN>>\' = \'Y\'\nBEGIN\n')
+
+        self.WHOLE_CREATE_SCRIPT_LIST.append('use <<ConversionDatabase>>\n\n')
+        self.WHOLE_CREATE_SCRIPT_LIST.append('IF \'<<LoadSourceDataFlagYN>>\' = \'Y\'\nBEGIN\n\n')
+
 
         for each_file in target_files:
             # filepath = CURRENT_DIR + '\\' + TARGET_DIR + '\\' + each_file
@@ -278,9 +287,16 @@ class script_writer_model():
                 self.error_tracker.append(f'Unable to add import table script for {each_file}\nPotentially invalid file format like xls, should be csv, txt or other flat/delimited type... See error raised below\nError:{e.__str__()}\n{("-" * 100)}\n\n')
                 continue
 
+        #add end statement for each due to addition of BEGIN for if statement
+        self.WHOLE_CREATE_SCRIPT_LIST.append('\nEND')
+        self.WHOLE_BULK_INSERT_LIST.append('\nEND')
+
+
+
         # write make tables script
         write_tables_script = 1
         create_table_export_full_path = EXPORT_PATH + '\\' +'CreateSourceTables.sql'
+
         if write_tables_script == 1:
             with open(create_table_export_full_path, 'w') as create_writer:
                 create_writer.write(''.join(self.WHOLE_CREATE_SCRIPT_LIST))
@@ -293,42 +309,6 @@ class script_writer_model():
                 import_writer.write(''.join(self.WHOLE_BULK_INSERT_LIST))
             #print("COMPLETED WRITING CREATE DATA IMPORT SCRIPT")
 
-'''
-#test works
-def main():
-    # if 'table'.upper() in RESERVED_KEYWORDS:
-    #     raise invalid_table_name('table','filename')
-    # need to test target dir
-    DELIMITER = ',' #will want this as a vraibalt
-    TARGET_DIR = 'D:\\Users\\ramzi.adil\\PycharmProjects\\DataSourceTool\\pythonProject\\SourceDataDirectory' # want this as a variable
-    EXPORT_PATH = 'D:\\Users\\ramzi.adil\\PycharmProjects\\DataSourceTool\\pythonProject\\' #probably want  an export path as well
-    all_files = get_all_filenames(TARGET_DIR) #want to try catch for files that are not flat files
-    target_files = all_files
-
-    WHOLE_BULK_INSERT_LIST.append('DECLARE @data_src VARCHAR(max) = \'<<SourceLoadPath>>\'\n')
-
-    for each_file in target_files:
-        # filepath = CURRENT_DIR + '\\' + TARGET_DIR + '\\' + each_file
-        filepath = TARGET_DIR + '\\' + each_file
-        make_create_tables_scripts(filepath,DELIMITER)
-        # make_source_import_script(filepath)
-        add_insert_script(filepath, DELIMITER)
-
-    # write make tables script
-    write_tables_script = 1
-    if write_tables_script == 1:
-        with open(EXPORT_PATH + 'CreateSourceTables.sql', 'w') as create_writer:
-            create_writer.write(''.join(WHOLE_CREATE_SCRIPT_LIST))
-        print("COMPLETED WRITING CREATE SOURCE TABLES SCRIPT")
-
-    write_import_script = 1
-    if write_import_script == 1:
-        with open(EXPORT_PATH + 'ImportData.sql', 'w') as import_writer:
-            import_writer.write(''.join(WHOLE_BULK_INSERT_LIST))
-        print("COMPLETED WRITING CREATE DATA IMPORT SCRIPT")
-
-    input("Press enter to exit")
-'''
 
 
 

@@ -4,15 +4,15 @@ from tkinter import filedialog
 from view.tkinter_msg_view import *
 from time import sleep
 
-FILEPATH_DIR_DICT = {'P:':'\\\\AWSERPENTERPFS\\ERP-Conversion\\_Projects'}
 class script_writer_controller():
     def __init__(self):
         self.model = script_writer_model()
         self.main_window = main_window()
 
-
         #assign button fxns
         self.assign_main_window_button_functions()
+
+        self.msg_window = None
 
     def fix_dir_strings(self,filepath_in:str) -> str:
         """
@@ -54,21 +54,33 @@ class script_writer_controller():
         delimiter_entry_string_var = self.main_window.get_delimiter_entry_stringvar()
         target_dir_entry_string_var = self.main_window.get_target_dir_entry_stringvar()
         target_export_entry_string_var = self.main_window.get_export_path_entry_stringvar()
+        row_term_entry_string_var = self.main_window.get_row_terminator_dropdown_stringvar()
 
         #TODO no checks if values are empty want that
         self.model.delimiter = delimiter_entry_string_var.get()
         self.model.target_dir_path = target_dir_entry_string_var.get()
         self.model.export_directory_path = target_export_entry_string_var.get()
+        self.model.row_terminator = row_term_entry_string_var.get()
 
-        msg_window = message_window()
-        msg_window.update() #need this because label update won't update quick enough otherwise
+        #so only one message window exists at a time
+        #TODO make this better should not rely on setting variable to None line 84
+        if self.msg_window != None:
+            #print(self.msg_window)
+            self.msg_window.destroy()
+        else:
+            self.msg_window = message_window()
+
+        self.msg_window.update() #need this because label update won't update quick enough otherwise
 
         self.model.run()
 
         if self.model.error_tracker != []:
-            msg_window.error_list_tracker.extend(self.model.error_tracker)
+            self.msg_window.error_list_tracker.extend(self.model.error_tracker)
 
-        msg_window.set_text_to_complete()
+        self.msg_window.set_text_to_complete()
+
+        #temp fix
+        self.msg_window = None
 
     def assign_main_window_button_functions(self):
         """
