@@ -65,7 +65,7 @@ does not list them.
 
 
 - Browse button on GUI to select folders in your native OS so you do not
-need to manually type out the path to the directory button
+need to manually type out the path to the directory.
 
 
 - Generated ImportData.sql script will identify failed file imports by printing them
