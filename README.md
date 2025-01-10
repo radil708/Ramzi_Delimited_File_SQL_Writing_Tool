@@ -19,8 +19,8 @@ Author: Ramzi Reilly Adil
 
 
 ## Background
-In SQL, one of the tedious more laborious tasks is to create tables and import data from delimited files
-like csv. You need to match the table names and field names and if you have a large amount of files
+In SQL, one of the tedious and potentially time consuming tasks is to create tables and import data from delimited files
+like .csv's, .txt's, ..etc. You need to match the table names and field names and if you have a large amount of files
 it can take up a lot of time. I wrote this tool as a way to take a look at all the headers of those files
 and generate the scripts for me. This program will generate 2 files, the first is a CreateSourceTables.sql
 which contains create tables commands and an ImportData.sql which contains the bulk insert commands.
