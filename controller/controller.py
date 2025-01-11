@@ -16,6 +16,14 @@ class script_writer_controller():
 
         self.msg_window = None
 
+    def __new__(cls):
+        '''
+        Enforce singleton pattern
+        '''
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(script_writer_controller, cls).__new__(cls)
+        return cls.instance
+
     def fix_dir_strings(self,filepath_in:str) -> str:
         """
         Helper function to make the path correct by replace '/' with '\'
@@ -55,14 +63,12 @@ class script_writer_controller():
         target_export_entry_string_var = self.main_window.get_export_path_entry_stringvar()
         row_term_entry_string_var = self.main_window.get_row_terminator_dropdown_stringvar()
 
-        #TODO no checks if values are empty want that
         self.model.delimiter = delimiter_entry_string_var.get()
         self.model.target_dir_path = target_dir_entry_string_var.get()
         self.model.export_directory_path = target_export_entry_string_var.get()
         self.model.row_terminator = row_term_entry_string_var.get()
 
         #so only one message window exists at a time
-        #TODO make this better should not rely on setting variable to None line 84
         if self.msg_window != None:
             self.msg_window.destroy()
         else:

@@ -1,44 +1,5 @@
 import os
-from model.Custom_Errors import *
-
-# CONSTANTS
-NON_VALID_CHARS_FIELD_NAME = ['/']
-NON_VALID_CHARS_TABLE_NAME = ['[',']','#','-']
-WHITE_SPACE_CHAR_LIST = [' ', '\n', '\t']
-REP_DICT = {' ': r'\s', '\n': '\\n', '\t': '\\t'}
-RESERVED_KEYWORDS = ['ADD', 'EXTERNAL', 'PROCEDURE', 'ALL', 'FETCH', 'PUBLIC',
-                     'ALTER', 'FILE', 'RAISERROR', 'AND', 'FILLFACTOR', 'READ',
-                     'ANY', 'FOR', 'READTEXT', 'AS', 'FOREIGN', 'RECONFIGURE',
-                     'ASC', 'FREETEXT', 'REFERENCES', 'AUTHORIZATION',
-                     'FREETEXTTABLE', 'REPLICATION', 'BACKUP', 'FROM',
-                     'RESTORE', 'BEGIN', 'FULL', 'RESTRICT', 'BETWEEN', 'FUNCTION',
-                     'RETURN', 'BREAK', 'GOTO', 'REVERT', 'BROWSE', 'GRANT', 'REVOKE',
-                     'BULK', 'GROUP', 'RIGHT', 'BY', 'HAVING', 'ROLLBACK', 'CASCADE',
-                     'HOLDLOCK', 'ROWCOUNT', 'CASE', 'IDENTITY', 'ROWGUIDCOL', 'CHECK',
-                     'IDENTITY_INSERT', 'RULE', 'CHECKPOINT', 'IDENTITYCOL', 'SAVE',
-                     'CLOSE', 'IF', 'SCHEMA', 'CLUSTERED', 'IN', 'SECURITYAUDIT',
-                     'COALESCE', 'INDEX', 'SELECT', 'COLLATE', 'INNER',
-                     'SEMANTICKEYPHRASETABLE', 'COLUMN', 'INSERT',
-                     'SEMANTICSIMILARITYDETAILSTABLE', 'COMMIT', 'INTERSECT',
-                     'SEMANTICSIMILARITYTABLE', 'COMPUTE', 'INTO', 'SESSION_USER',
-                     'CONSTRAINT', 'IS', 'SET', 'CONTAINS', 'JOIN', 'SETUSER',
-                     'CONTAINSTABLE', 'KEY', 'SHUTDOWN', 'CONTINUE', 'KILL', 'SOME',
-                     'CONVERT', 'LEFT', 'STATISTICS', 'CREATE', 'LIKE', 'SYSTEM_USER',
-                     'CROSS', 'LINENO', 'TABLE', 'CURRENT', 'LOAD', 'TABLESAMPLE',
-                     'CURRENT_DATE', 'MERGE', 'TEXTSIZE', 'CURRENT_TIME', 'NATIONAL',
-                     'THEN', 'CURRENT_TIMESTAMP', 'NOCHECK', 'TO', 'CURRENT_USER',
-                     'NONCLUSTERED', 'TOP', 'CURSOR', 'NOT', 'TRAN', 'DATABASE',
-                     'NULL', 'TRANSACTION', 'DBCC', 'NULLIF', 'TRIGGER', 'DEALLOCATE',
-                     'OF', 'TRUNCATE', 'DECLARE', 'OFF', 'TRY_CONVERT', 'DEFAULT',
-                     'OFFSETS', 'TSEQUAL', 'DELETE', 'ON', 'UNION', 'DENY', 'OPEN',
-                     'UNIQUE', 'DESC', 'OPENDATASOURCE', 'UNPIVOT', 'DISK', 'OPENQUERY',
-                     'UPDATE', 'DISTINCT', 'OPENROWSET', 'UPDATETEXT', 'DISTRIBUTED',
-                     'OPENXML', 'USE', 'DOUBLE', 'OPTION', 'USER', 'DROP', 'OR',
-                     'VALUES', 'DUMP', 'ORDER', 'VARYING', 'ELSE', 'OUTER', 'VIEW',
-                     'END', 'OVER', 'WAITFOR', 'ERRLVL', 'PERCENT', 'WHEN', 'ESCAPE',
-                     'PIVOT', 'WHERE', 'EXCEPT', 'PLAN', 'WHILE', 'EXEC', 'PRECISION',
-                     'WITH', 'EXECUTE', 'PRIMARY', 'WITHIN GROUP', 'EXISTS', 'PRINT',
-                     'WRITETEXT', 'EXIT', 'PROC']
+from model.exceptions_and_constants import *
 
 '''
 This class acts as the model for Ramzi's Delimited File SQL Writing Tool program.
@@ -55,8 +16,20 @@ class script_writer_model():
         self.skip_file = []
         self.row_terminator = None
 
+    def __new__(cls):
+        '''
+        Enforce singleton pattern
+        '''
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(script_writer_model, cls).__new__(cls)
+        return cls.instance
+
 
     def reset_file_model_parameters(self):
+        '''
+        Clears out model data
+        :return: @None
+        '''
         self.file_number_counter = 1
         self.target_dir_path = ''
         self.export_directory_path = ''
@@ -119,13 +92,12 @@ class script_writer_model():
         insert_list = []
     
         file_name = filepath_in.split('\\').pop()
-        table_name = file_name
-    
-        #remove file suffix if it exists
-        if '.' in file_name:
-            table_list = file_name.split('.')
-            table_name = table_list[0]
-    
+
+        # get file name no extension. Did it this way in case extension uses multiple periods
+        file_name_list = file_name.split('.')
+        file_name_no_extension = file_name_list.pop(0)
+
+        table_name = file_name_no_extension
         table_name = table_name.replace(' ','_') #remove space char in table name so don't have to use brackets when calling table name
     
         for invalid_char in NON_VALID_CHARS_TABLE_NAME:
@@ -151,8 +123,7 @@ class script_writer_model():
         :param filename: @str the filename we are making the table from
         :return: @str the whole insert script section per table
         """
-    
-    
+
         zero = f'DECLARE @command{self.file_number_counter} varchar(max) ='
         first = '\'BEGIN TRY\n' + input + '\nEND TRY\n'
         second = f'BEGIN CATCH\n\tPRINT \'\'Failed to insert data from {filename} into [dbo].[{table_name_in}]\'\''
@@ -170,14 +141,15 @@ class script_writer_model():
         :return: @None
         """
         file_name = filepath_in.split('\\').pop()
-    
-        #TODO may be an issue for extensions longer than 3 char
-        extension = file_name.split('.').pop()
-        table_name = file_name
-    
-        if '.' in file_name:
-            table_list = file_name.split('.')
-            table_name = table_list[0]
+
+        #get file name no extension. Did it this way in case extension uses multiple periods
+        file_name_list = file_name.split('.')
+        file_name_no_extension = file_name_list.pop(0)
+
+        #get extension
+        extension = '.'.join(file_name_no_extension)
+
+        table_name = file_name_no_extension # this is full name including the dot
         table_name = table_name.replace(' ',
                                         '_')  # remove space char in table name so don't have to use brackets
                                                     # when calling table name

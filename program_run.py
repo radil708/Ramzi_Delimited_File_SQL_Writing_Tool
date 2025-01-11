@@ -1,7 +1,6 @@
 from controller.controller import *
-
 '''
-Run Ramzi's Delimited File SQL Writing Tool from here.
+Run this script to run Ramzi's Delimited File SQL Writing Tool from.
 '''
 def main():
     contr = script_writer_controller()
