@@ -9,12 +9,23 @@ This class acts as the view for Ramzi's Delimited File SQL Writing Tool program.
 class main_window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.title("Ramzi's Delimited File SQL Script Writing Tool Version 1.1")
+        self.title("Ramzi's Delimited File SQL Script Writing Tool Version 1.2")
         self.geometry('700x400')
         self.resizable(False, False)
-        # self.protocol("WM_DELETE_WINDOW", lambda : exit(0))
-        self.eval('tk::PlaceWindow . center')
+        #self.eval('tk::PlaceWindow . center')
         self.configure(relief='raised')
+
+        # Get the screen width and height
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        # Calculate the x and y coordinates for the window to be centered
+        x = (screen_width - 700) // 2
+        y = (screen_height - 400) // 2
+
+        # Set the window's position
+        self.geometry(f"+{x}+{y}")
+
         self.protocol("WM_DELETE_WINDOW", sys.exit)
 
         style = ttk.Style()
