@@ -75,6 +75,10 @@ failed files to the SQL terminal in most cases.
 ## Author Notes
 Written in model-view-controller architectural design pattern.
 
+There are some portions of the script that are specific to my personal needs 
+such as the addition of variables surrounded by '<<>>'. 
+If you are using this you may remove those variables or modify them as needed.
+
 If you create a fork of this repo or clone it with your own edits, all I ask is that you leave a link
 to this original repo and credit me so that I can see what changes others will make. It may help
 me improve this master fork in the future. Thank you!
