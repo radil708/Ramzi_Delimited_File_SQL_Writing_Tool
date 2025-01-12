@@ -1,6 +1,6 @@
 Program: Ramzi's Delimited File SQL Writing Tool 
 
-Program Version: 1.1
+Program Version: 1.2
 
 Written in Python Version: 3.10.7
 
@@ -62,7 +62,10 @@ does not list them.
 - There is a variable that will be generated in the ImportData.SQL script called: @data_src
   - By default it is set to '<\<SourceDataLoadPath\>>'
   - You will want to replace '<\<SourceDataLoadPath\>>' with the actual path to the directory
-  containing the delimited files.
+  containing the delimited files or the import data will NOT actually run
+
+- Adds a flag to the ImportData.sql and CreateSourceTables.sql that you will need to change
+in order for the actual script to run on sql.
 
 
 - Browse button on GUI to select folders in your native OS so you do not
@@ -74,10 +77,6 @@ failed files to the SQL terminal in most cases.
 
 ## Author Notes
 Written in model-view-controller architectural design pattern.
-
-There are some portions of the script that are specific to my personal needs 
-such as the addition of variables surrounded by '<<>>'. 
-If you are using this you may remove those variables or modify them as needed.
 
 If you create a fork of this repo or clone it with your own edits, all I ask is that you leave a link
 to this original repo and credit me so that I can see what changes others will make. It may help

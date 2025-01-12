@@ -9,7 +9,7 @@ This class acts as the view for Ramzi's Delimited File SQL Writing Tool program.
 class main_window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.title("Ramzi's Delimited File SQL Script Writing Tool Version 1.1")
+        self.title("Ramzi's Delimited File SQL Script Writing Tool Version 1.2")
         self.geometry('700x400')
         self.resizable(False, False)
         #self.eval('tk::PlaceWindow . center')
