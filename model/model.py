@@ -249,18 +249,20 @@ class script_writer_model():
         Adds extra variables or flags to the generated create tables sql scripts
         :return: @None
         '''
-        pass
+        self.whole_create_script_content_list.insert(0,'IF \'<<LoadSourceDataFlagYN>>\' = \'Y\'\nBEGIN\n\n')
+        self.whole_create_script_content_list.insert(0,'use <<ConversionDatabase>>\n\n')
+        self.whole_create_script_content_list.append('\nEND')
 
     def add_variables_and_flags_to_import_tables_script(self) -> None:
         '''
         Adds extra variables or flags to the generated import data tables sql scripts
         :return: @None
         '''
-        self.whole_bulk_insert_content_list.insert(0, 'IF @data_src != \'<<SourceDataLoadPath>>\'\nBEGIN\n')
+        self.whole_bulk_insert_content_list.insert(0,'IF \'<<LoadSourceDataFlagYN>>\' = \'Y\'\nBEGIN\n\n')
         self.whole_bulk_insert_content_list.insert(0, 'DECLARE @data_src VARCHAR(max) = \'<<SourceDataLoadPath>>\'\n\n')
+        self.whole_bulk_insert_content_list.insert(0,'use <<ConversionDatabase>>\n\n')
 
         self.whole_bulk_insert_content_list.append('\nEND')
-        self.whole_bulk_insert_content_list.append('\nELSE\n\tPRINT \'Import script failed to run, please set the @data_src variable to a valid path\'')
 
     def generate_create_tables_file(self):
         '''

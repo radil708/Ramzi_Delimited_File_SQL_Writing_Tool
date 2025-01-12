@@ -6,6 +6,8 @@ Written in Python Version: 3.10.7
 
 Author: Ramzi Reilly Adil
 
+Fork Name: EERP
+
 ## Table of Contents
 - [Background](#background)
 - [Install Requirements](#Install-Requirements)
@@ -62,7 +64,7 @@ does not list them.
 - There is a variable that will be generated in the ImportData.SQL script called: @data_src
   - By default it is set to '<\<SourceDataLoadPath\>>'
   - You will want to replace '<\<SourceDataLoadPath\>>' with the actual path to the directory
-  containing the delimited files or the import data will NOT actually run
+  containing the delimited files 
 
 - Adds a flag to the ImportData.sql and CreateSourceTables.sql that you will need to change
 in order for the actual script to run on sql.
