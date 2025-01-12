@@ -43,19 +43,20 @@ string "tab"), as well as the row terminator. Then you can click the "run" butto
 at the bottom right corner of the GUI.
 
 ## Features
-- The program will automatically replace the space character 
+- Automatically replaces the space character 
 with an underscore in both the table names and field names
 for the CreateSourceData.sql. 
     - For example: if a delimited source file called "Data Set 1" has field called "First Name" then the scripts generated
 will have a create statement for the table "Data_Set_1" with a field "First_Name"
 
 
-- The program will automatically assign field names if the source file
+
+- Automatically assigns field names if the source file
 does not list them.
   - For example: If a file has 4 columns and two are listed as empty like "First Name,,Last Name," then the table created will have the fields: "First_Name, NO_FIELD_NAME_1,Last_Name,NO_FIELD_NAME_2".
 
 
-- The program will skip any files that it cannot read automatically such as .zip files. An error will show up in the summary window that pops up after hitting the run button. This will say the "program completed with errors" meaning, it will work on the valid files but list out the ones that were invalid.
+- Skips any files that it cannot read such as .zip files. More info will show up in the summary window that pops up after hitting the run button. This will say the "program completed with errors" meaning, it will work on the valid files but list out the ones that were invalid.
 
 
 - There is a variable that will be generated in the ImportData.SQL script called: @data_src
@@ -74,15 +75,11 @@ failed files to the SQL terminal in most cases.
 ## Author Notes
 Written in model-view-controller architectural design pattern.
 
-There are some portions of the script that are specific to my personal needs such as the addition
-of variables surrounded by '<<>>'. If you are using this you may remove those variables or modify
-them as needed.
-
 If you create a fork of this repo or clone it with your own edits, all I ask is that you leave a link
 to this original repo and credit me so that I can see what changes others will make. It may help
 me improve this master fork in the future. Thank you!
 
-Included in this repo is a directory called LegacyDataFile1. You can 
+Included in this repo is a directory called ExampleDataFile. You can 
 use this as a way to test the program yourself. Select it as the "Target Directory"
 in the GUI and set the delimiter to "," (comma only no quotes).
 

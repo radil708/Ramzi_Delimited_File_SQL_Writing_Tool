@@ -1,15 +1,22 @@
 '''
 Custom exceptions/errors created for the program as well as constants
 '''
-class invalid_table_name(Exception):
+class CustomExceptionInvalidTableName(Exception):
     def __init__(self, invalid_tablename,filename_in):
-        self.message = f'TableName: \"{invalid_tablename}\" from file: \"{filename_in}\" is not a valid tablename\nA table cannot have the name of a t-sql keyword such as \'table\',\'update\'.. etc\n '
+        self.message = f'TableName: \"{invalid_tablename}\" from file: \"{filename_in}\" is not a valid tablename\nA table cannot be the name of a t-sql keyword such as TABLE, ORDER,...etc\n '
         super().__init__(self.message)
 
-class invalid_file(Exception):
+    def __str__(self):
+        return self.message
+
+class CustomExceptionInvalidFile(Exception):
     def __init__(self, filename_in):
-        self.message = f'Unable to read file {filename_in}, please ensure only flat files are used i.e. csv, txt... not xls'
+        self.message = f'Unable to decode one or more characters from file: \"{filename_in}\".\nPlease ensure only flat files are used i.e. csv, txt... not xls' \
+                        f"\nOtherwise, ensure that the file is encoded in the utf-8 format"
         super().__init__(self.message)
+
+    def __str__(self):
+        return self.message
 
 #CONSTANTS
 NON_VALID_CHARS_FIELD_NAME = ['/']
