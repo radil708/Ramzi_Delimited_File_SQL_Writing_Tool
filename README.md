@@ -33,8 +33,11 @@ You can then run the generated scripts in SQL. The scripts generated are made fo
 - Python version 3.10.7 and above
 
 ## How To Use
-Simply run the program_run.py program. This will bring up a graphical user interface (GUI)
-that a user can interact with.
+- Install python
+- Make sure python is added to the path in your system
+- Clone/download this repo to your local
+- Double click "program_run.py" file or run the command: "python program_run.py" from the terminal.
+If using the terminal, make sure the terminal is navigated to your clone of this repo.
 
 ## Graphical User Interface
 The GUI requires some entries be filled before running.
