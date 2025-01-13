@@ -18,6 +18,30 @@ class CustomExceptionInvalidFile(Exception):
     def __str__(self):
         return self.message
 
+class CustomExceptionMissingEntry(Exception):
+    def __init__(self, missing_entry):
+        self.message = f'Missing user entry for {missing_entry}'
+        super().__init__(self.message)
+
+    def __str__(self):
+        return self.message
+
+class CustomExceptionNoFilesFound(Exception):
+    def __init__(self, directory_path):
+        self.message = f'There are 0 files in target directory: {directory_path}\nNo files could be processed'
+        super().__init__()
+
+    def __str__(self):
+        return self.message
+
+class CustomExceptionInvalidDirectoryPath(Exception):
+    def __init__(self, directory_path, directory_entry):
+        self.message = f'Entry for {directory_entry} contains an invalid filepath: {directory_path}'
+        super().__init__()
+
+    def __str__(self):
+        return self.message
+
 #CONSTANTS
 NON_VALID_CHARS_FIELD_NAME = ['/']
 NON_VALID_CHARS_TABLE_NAME = ['[',']','#','-']

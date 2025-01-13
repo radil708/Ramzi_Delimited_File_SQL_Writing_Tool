@@ -48,6 +48,87 @@ class script_writer_model():
         self.current_create_script_section = None
         self.current_import_script_section = None
 
+    def is_delimiter_empty(self) -> None:
+        '''
+		Used to check if user entry for delimiter has been set.
+		raises an error if not.
+		:return: @None
+		'''
+        if self.delimiter == '':
+            raise CustomExceptionMissingEntry('DELIMITER')
+        else:
+            return
+
+    def is_target_dir_empty(self) -> None:
+        '''
+		Used to check if user entry for target directory has been set.
+		raises an error if not.
+		:return: @None
+		'''
+        if self.target_dir_path == '':
+            raise CustomExceptionMissingEntry('Target Directory')
+        else:
+            return
+
+    def is_export_dir_empty(self) -> None:
+        '''
+		Used to check if user entry for export directory has been set.
+		raises an error if not.
+		:return: @None
+		'''
+        if self.export_directory_path == '':
+            raise CustomExceptionMissingEntry('File Export Directory')
+        else:
+            return
+
+    def does_target_dir_have_files(self) -> None:
+        '''
+        Used to check if there are files in target directory
+        :return: @None
+        '''
+        if len(self.target_files) == 0:
+            raise CustomExceptionNoFilesFound(self.target_dir_path)
+        else:
+            return
+
+    def is_valid_target_dir_path(self) -> None:
+        '''
+        Used to check if target directory path is valid
+        :return: @None
+        '''
+        if not os.path.exists(self.target_dir_path):
+            raise CustomExceptionInvalidDirectoryPath(self.target_dir_path,'target directory')
+        else:
+            return
+
+    def is_valid_target_export_path(self) -> None:
+        '''
+        Used to check if export directory path is valid
+        :return: @None
+        '''
+        if not os.path.exists(self.export_directory_path):
+            raise CustomExceptionInvalidDirectoryPath(self.export_directory_path,'export directory')
+        else:
+            return
+
+    def check_for_valid_paths(self) -> None:
+        '''
+        Checks if user defined paths are valid
+        :return: @none
+        '''
+        self.is_valid_target_dir_path()
+        self.is_valid_target_export_path()
+
+    def check_user_defined_attributes(self) -> None:
+        '''
+		Checks all user defined entries. Raises an error if any are
+		encountered.
+		:return: @None
+		'''
+        self.is_delimiter_empty()
+        self.is_target_dir_empty()
+        self.is_export_dir_empty()
+
     def get_all_filenames(self,target_directory: str) -> list:
         '''
         Get all filenames from a specific directory
