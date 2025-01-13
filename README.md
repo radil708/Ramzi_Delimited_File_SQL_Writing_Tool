@@ -41,8 +41,8 @@ If using the terminal, make sure the terminal is navigated to your clone of this
 The GUI requires some entries be filled before running.
 You will need to input the directory the delimited files are located in, the directory 
 where you want the generated sql scripts to be made, the delimiter used in the files
-(in the case of .csv, it's a comma, if it's tab delimited you have to use the 
-string "tab"), as well as the row terminator. Then you can click the "run" button
+(in the case of .csv, it's "," (no quotes), if it's tab delimited you have to use the 
+word "tab"), as well as the row terminator. Then you can click the "run" button
 at the bottom right corner of the GUI.
 
 ## Features
