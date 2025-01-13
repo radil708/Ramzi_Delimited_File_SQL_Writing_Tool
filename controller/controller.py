@@ -95,16 +95,41 @@ class script_writer_controller():
 
         return '\n'.join(error_string_list)
 
-    def run_btn_fxn(self):
+    def is_setup_valid(self) -> bool:
         '''
-        The function to activate when the run button is clicked.
-        :return:
+        Checks set up before running the program. Must always run this before
+        running intra_run_fxn()
+        :return: @bool if an error is encountered during set up, returns False
+                    else returns True
         '''
         self.set_model_data()
-        self.model.set_target_files()
+
+        encountered_set_up_error = True
+
+        try:
+            self.model.check_user_defined_attributes()
+            self.model.check_for_valid_paths()
+            self.model.set_target_files()
+            self.model.does_target_dir_have_files()
+        except Exception as e:
+            pop_up = pop_up_window(pop_up_message=e.__str__(), pop_up_title='Error',
+                                   master=self.main_window, pop_up_message_title='Failed To Run Program')
+            pop_up.update()
+            self.model.reset_file_model_parameters()
+            encountered_set_up_error = False
+
+        return encountered_set_up_error
+
+    def intra_run_fxn(self) -> list:
+        '''
+        Run this fxn only after is_setup_valid returns True. Processes files and generates
+        SQL scripts.
+        :return: @list errors encountered while running program
+        '''
+
         error_tracker = []
 
-        pop_up = pop_up_window(pop_up_message='Running Program',pop_up_title='Status Window',
+        pop_up = pop_up_window(pop_up_message='Running Program', pop_up_title='Status Window',
                                master=self.main_window)
         pop_up.update()
 
@@ -118,8 +143,8 @@ class script_writer_controller():
                 pop_up.set_message(f"Processing file {file_counter} of {total_files}\nFilename: {each_file}")
                 pop_up.update()
                 self.model.read_one_file(target_file=each_file)
-            except Exception as e:
-                error_tracker.append([each_file,e.__str__()])
+            except Exception as e:  # catch any post set up errors
+                error_tracker.append([each_file, e.__str__()])
                 continue
 
             self.model.add_script_section()
@@ -129,21 +154,44 @@ class script_writer_controller():
         self.model.generate_create_tables_file()
         self.model.generate_import_tables_file()
 
-        if len(error_tracker) == 0:
+        pop_up.destroy()
+
+        return error_tracker
+
+    def post_run_fxn(self,list_intra_fxn_errors:list) -> None:
+        '''
+        Generates post run summary. Provides info on files processed. Run this after
+        running intra_run_fxn
+        :param list_intra_fxn_errors: @list list of errors encounter during intra_run_fxn.
+                                            This should be what is returned by intra_run_fxn
+        :return: @None
+        '''
+
+        if len(list_intra_fxn_errors) == 0:
             amount_of_files_processed = len(self.model.target_files)
             status_message_title = f"Program Completed\n "
             status_message = f"Succesfully Processed {amount_of_files_processed} of {len(self.model.target_files)} files\n" \
                                f"Scripts generated in directory: {self.model.export_directory_path}"
         else:
-            amount_of_files_processed = len(self.model.target_files) - len(error_tracker)
+            amount_of_files_processed = len(self.model.target_files) - len(list_intra_fxn_errors)
             status_message_title = f"Program Completed With Errors\n "
             status_message = f"Sucessfully Processed {amount_of_files_processed} of {len(self.model.target_files)} files\n" \
                              f"Scripts generated in directory: {self.model.export_directory_path}\n"
-            status_message += '\n' + self.generate_error_summary(error_tracker)
+            status_message += '\n' + self.generate_error_summary(list_intra_fxn_errors)
 
-        pop_up.set_message_title(status_message_title)
-        pop_up.set_message(status_message)
+        pop_up = pop_up_window(status_message,'Post Run Summary',status_message_title)
         pop_up.update()
+
+    def run_btn_fxn(self):
+        '''
+        The function to activate when the run button is clicked.
+        :return:
+        '''
+        is_valid_setup = self.is_setup_valid()
+        if is_valid_setup is False:
+            return
+        errors_encountered_during_run = self.intra_run_fxn()
+        self.post_run_fxn(errors_encountered_during_run)
 
     def assign_main_window_button_functions(self):
         """
