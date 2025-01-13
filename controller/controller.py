@@ -148,6 +148,7 @@ class script_writer_controller():
                 continue
 
             self.model.add_script_section()
+            self.model.file_number_counter += 1
 
         self.model.add_variables_and_flags_to_create_tables_script()
         self.model.add_variables_and_flags_to_import_tables_script()

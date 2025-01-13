@@ -200,9 +200,9 @@ class script_writer_model():
             raise CustomExceptionInvalidTableName(table_name, file_name)
     
         #generate the create script per file
-        ct_drop = f'IF OBJECT_ID (\'{table_name}\', \'U\') IS NOT NULL\n\tDROP TABLE dbo.{table_name};\n\n'
+        ct_drop = f'IF OBJECT_ID (\'{table_name}\', \'U\') IS NOT NULL\n\tDROP TABLE [dbo].[{table_name}];\n\n'
         fields_as_string = self.make_create_tables_fields(filepath_in,delimiter_in)
-        ct_create = f'CREATE TABLE {table_name}\n\t(\n' + fields_as_string + '\t)\n\n' + '--' + ('='*50) + '\n'
+        ct_create = f'CREATE TABLE [{table_name}]\n\t(\n' + fields_as_string + '\t)\n\n' + '--' + ('='*50) + '\n'
         insert_list.append(ct_drop)
         insert_list.append(ct_create)
 
@@ -259,7 +259,7 @@ class script_writer_model():
         else:
             delim = delimiter_in
     
-        trunc_cmd = f'\nIF OBJECT_ID (\'{table_name}\', \'U\') IS NOT NULL\n\tTRUNCATE TABLE dbo.{table_name};\n\n'
+        trunc_cmd = f'\nIF OBJECT_ID (\'{table_name}\', \'U\') IS NOT NULL\n\tTRUNCATE TABLE [dbo].[{table_name}];\n\n'
     
         self.whole_bulk_insert_content_list.append(trunc_cmd)
 
